@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 8dedda26bb0c44b49bde1e75eec77136
+  m_SerializeEntries:
+  - m_GUID: 9cbadf9d091c9c845974640ec5eea705
+    m_Address: Assets/Mapchips/ClearBoxSwitchFloor.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 1e7a9defb922b4f4daafcaaef5db8654
+    m_Address: Assets/Mapchips/ImmovableFloor.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 873dea2b6d57bb444a05a3abccd604b4
+    m_Address: Assets/Mapchips/InvisibleImmovableFloor.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e03a10f627885c041b207abe1a1d724b
+    m_Address: Assets/Mapchips/BackWall.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: aba050db50705e344b5080bf1cc2dc2f
+    m_Address: Assets/Mapchips/BoxSwitchFloor.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 570af45ebada36248a8a8393bc2c5cd0
+    m_Address: Assets/Mapchips/GoalFloor.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 656e48305fb4f7a49acf7ccc8c8b1c7c
+    m_Address: Assets/Mapchips/NomalFloor.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 2634dc59bbfc66c488360358ad5fee77
+    m_Address: Assets/Mapchips/PlayerSwitchFloor.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 22da1d5606410704ba74a22f1d03a963
+    m_Address: Assets/Mapchips/SubPlayerOnlyFloor.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 77cbc48abc67a5441afec49b9ae8b371
+    m_Address: Assets/Mapchips/MainPlayerOnlyFloor.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 7792489f61dd99f4c8b4b085db863119, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: e1f847bbd1754bd4994e6ec75b913e34, type: 2}
+    - {fileID: 11400000, guid: cf53b89d697dafe40bf9a6e254bd0ad5, type: 2}
