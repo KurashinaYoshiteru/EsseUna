@@ -10,7 +10,7 @@ public class FadeManager : MonoBehaviour
     public bool isFadeOut = false;
 
     public float alpha = 0.0f;
-    public float fadeSpeed = 0.2f;
+    public float fadeSpeed = 1.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -54,16 +54,14 @@ public class FadeManager : MonoBehaviour
         this.GetComponentInChildren<Image>().color = new Color(0.0f, 0.0f, 0.0f, alpha);
     }
 
-    public void StartFadeIn(float fadeInSpeed)
+    public void StartFadeIn()
     {
-        this.fadeSpeed = fadeInSpeed;
         isFadeIn = true;
         isFadeOut = false;
     }
 
-    public void StartFadeOut(float fadeOutSpeed)
+    public void StartFadeOut()
     {
-        this.fadeSpeed = fadeOutSpeed;
         isFadeIn = false;
         isFadeOut = true;
     }

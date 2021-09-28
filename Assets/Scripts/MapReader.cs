@@ -6,18 +6,17 @@ using System.IO;
 //Mapの様々な情報
 public struct MapDatas
 {
-    public int stageNum;
-    public int movableTime;
+    public int stageNum;                                            //ステージ番号
+    public int movableTime;                                         //動ける回数
     public List<string[]> mapTile;                                  //マップチップを判別するための記号
     public int limitPosXmin, limitPosXmax;                          //X軸の最大と最小
     public int limitPosYmin, limitPosYmax;                          //Y軸の最大と最小
-    //public Dictionary<string, ChangeMapDatas> changeMapData;
-    //public Dictionary<string, MoveObjectDatas> moveObjectData;
     public Dictionary<string, string> mapTileImageData;             //マップチップの画像データ
     public Dictionary<string, ObjectDatas> objectData;              //マップチップ以外のオブジェクトデータ
     public string immovableData;                                    //動けないマスのデータ
 }
 
+//各オブジェクトが保持する情報
 public struct ObjectDatas
 {
     public string prefabName;
@@ -25,44 +24,27 @@ public struct ObjectDatas
     public int posY;
 }
 
-/*
-public struct ChangeMapDatas
-{
-    public string mapName;
-    public int playerPosX;
-    public int playerPosY;
-}
-
-public struct MoveObjectDatas
-{
-    public string prefabName;
-    public int posX;
-    public int posY;
-}
-*/
-
 public class MapReader : MonoBehaviour
 {
-    public TextAsset mapFile;                                     //マップデータを記録した.txtファイル
-
     private List<string[]> mapDataList = new List<string[]>();    //mapFileの中身をstring型に起こしたリスト
     private int lineNumber = 0;                                   //現在確認中の行数
     private GameObject mapBaseObject;                             //マップの親オブジェクト
     private MapDatas mapDatas;                                    //マップのデータ一覧
 
-    //public string loadMapTags = "1";
+    public TextAsset mapFile;                                     //マップデータを記録した.txtファイル
     public string stageName = "Stage1";                           //ステージの親、ステージ名にしておく
 
     private void Awake()
     {
+        //マップデータの初期化
         InitializeMapData();
     }
 
     //マップデータの初期化
     public void InitializeMapData()
     {
-        GetMapData();
-        SetMapData();
+        GetMapData();      //.txtファイルを取得
+        SetMapData();      //MapDataの形に変換して保存
     }
 
     //設定した.txtファイルをstringでmapDataListにまとめて保存する
@@ -104,34 +86,6 @@ public class MapReader : MonoBehaviour
                     objectData = new Dictionary<string, ObjectDatas>()
                 };
 
-
-                /*
-                mapBaseObject = null;
-                int firstPosX = 0;
-                int firstPosY = 0;
-                bool firstMap = false;
-
-                mapDatas = new MapDatas
-                {
-                    changeMapData = new Dictionary<string, ChangeMapDatas>()
-                };
-                */
-
-                /*
-                if (stageName == mapDataList[lineNumber][0])
-                {
-                    //mapBaseObject = GameObject.Find(stageName).gameObject;
-                    mapBaseObject = GameObject.Find("StageParent").gameObject;
-                }
-
-                if (mapBaseObject == null)
-                {
-                    Debug.Log(lineNumber);
-                    Debug.LogError(mapDataList[lineNumber][0] + "というマップは存在しません。");
-                    break;
-                }
-                */
-
                 //Inspectorで設定したステージ名のマップデータを読み込む
                 if (stageName == mapDataList[lineNumber][0])
                 {
@@ -156,30 +110,10 @@ public class MapReader : MonoBehaviour
                                 break;
                             default:
                                 break;
-                                /*
-                                case "ChangeMapDataStart":
-                                    LoadChangeMapData();
-                                    break;
-                                case "FirstMap":
-                                    firstMap = true;
-                                    firstPosX = int.Parse(mapDataList[lineNumber][1]);
-                                    firstPosY = int.Parse(mapDataList[lineNumber][2]);
-                                    break;
-                                */
                         }
                     }
                     mapBaseObject.GetComponent<MapStatus>().SetMapData(mapDatas);
                 }
-
-                //取得したマップ情報を現在のステージに渡す
-                //mapBaseObject.GetComponent<MapStatus>().SetMapData(mapDatas);
-                
-                /*
-                if (firstMap)
-                {
-                    mapObject.GetComponent<MapStatus>().SetCurrentMap(firstPosX, firstPosY);
-                }
-                */
             }
             lineNumber++;
         }
@@ -265,42 +199,4 @@ public class MapReader : MonoBehaviour
 
         }
     }
-
-    /*
-    private void LoadChangeMapData()
-    {
-        lineNumber++;
-
-        while(mapDataList[lineNumber][0] != "ChangeMapDataEnd")
-        {
-            ChangeMapDatas cmDatas = new ChangeMapDatas
-            {
-                mapName = mapDataList[lineNumber][1],
-                playerPosX = int.Parse(mapDataList[lineNumber][2]),
-                playerPosY = int.Parse(mapDataList[lineNumber][3]),
-            };
-
-            mapDatas.changeMapData.Add(mapDataList[lineNumber][0], cmDatas);
-            lineNumber++;
-
-            if(lineNumber >= mapDataList.Count)
-            {
-                Debug.LogError("ChangeMapDataロード時のエラーです。");
-                return;
-            }
-        }
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    */
 }

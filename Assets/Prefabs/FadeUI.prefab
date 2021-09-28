@@ -116,7 +116,7 @@ MonoBehaviour:
   isFadeIn: 1
   isFadeOut: 0
   alpha: 0
-  fadeSpeed: 3
+  fadeSpeed: 1
 --- !u!1 &6948540464266182625
 GameObject:
   m_ObjectHideFlags: 0

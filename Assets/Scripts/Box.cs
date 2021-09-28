@@ -4,75 +4,53 @@ using UnityEngine;
 
 public class Box : MonoBehaviour
 {
+    private static float MOVE_TIME = 0.2f;       //1マス移動するのにかかる時間
 
-    private static float MOVE_INTERVAL = 0.1f;      //静止状態から動き始めるまでの時間
-    private static int MOVE_FRAME = 45;             //1マス移動するのに必要なフレーム数  60だと1秒間で6マスくらい
+    public MapStatus mapStatus;                  //現在のMapStatus.cs、MapDataの更新の際に参照
+    public int boxPosX;                          //X座標
+    public int boxPosY;                          //Y座標
 
-
-    public MapStatus mapStatus;
-
-    public int boxPosX;
-    public int boxPosY;
-
-    private bool isMove = false;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
+    //Player.csで呼ばれる
     public void StartCorotineMoveBox(MapStatus.Direction dir)
     {
         StartCoroutine(MovingPosition(dir));
     }
 
-    public IEnumerator MovingPosition(MapStatus.Direction dir)
+    //箱の移動、MapDataの更新と座標の移動
+    private IEnumerator MovingPosition(MapStatus.Direction dir)
     {
         mapStatus.UpdateMapData(boxPosX, boxPosY, null);
+
+        float timer = 0;
+        Vector3 moveDir = Vector3.zero;
 
         switch (dir)
         {
             case MapStatus.Direction.Left:
                 boxPosX -= 1;
-                for (int i = 0; i < MOVE_FRAME; i++)
-                {
-                    transform.position += Vector3.left / MOVE_FRAME;
-                    yield return null;
-                }
+                moveDir = Vector3.left;
                 break;
             case MapStatus.Direction.Up:
                 boxPosY += 1;
-                for (int i = 0; i < MOVE_FRAME; i++)
-                {
-                    transform.position += Vector3.up / MOVE_FRAME;
-                    yield return null;
-                }
+                moveDir = Vector3.up;
                 break;
             case MapStatus.Direction.Right:
                 boxPosX += 1;
-                for (int i = 0; i < MOVE_FRAME; i++)
-                {
-                    transform.position += Vector3.right / MOVE_FRAME;
-                    yield return null;
-                }
+                moveDir = Vector3.right;
                 break;
             case MapStatus.Direction.Down:
                 boxPosY -= 1;
-                for (int i = 0; i < MOVE_FRAME; i++)
-                {
-                    transform.position += Vector3.down / MOVE_FRAME;
-                    yield return null;
-                }
+                moveDir = Vector3.down;
                 break;
         }
-        mapStatus.UpdateMapData(boxPosX, boxPosY, transform.gameObject);
 
+        while (timer <= MOVE_TIME)
+        {
+            transform.position += moveDir / (MOVE_TIME / Time.deltaTime);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        mapStatus.UpdateMapData(boxPosX, boxPosY, transform.gameObject);
     }
 }

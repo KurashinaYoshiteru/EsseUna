@@ -4,89 +4,64 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    /*
-    public enum Direction
-    {
-        Left,
-        Up,
-        Right,
-        Down,
-        EnumMax
-    }
-    */
 
-    //private MapStatus.Direction currentDir = MapStatus.Direction.Down;
+    //キーコードを変数化して後で変えられるようにしておく
+    private KeyCode KEYCODE_MOVE_LEFT = KeyCode.LeftArrow;
+    private KeyCode KEYCODE_MOVE_UP = KeyCode.UpArrow;
+    private KeyCode KEYCODE_MOVE_RIGHT = KeyCode.RightArrow;
+    private KeyCode KEYCODE_MOVE_DOWN = KeyCode.DownArrow;
+    private KeyCode KEYCODE_ACTION = KeyCode.Space;
+    private static float MOVE_TIME = 0.2f;       //1マス移動するのにかかる時間
 
-    //キーコードをpublicでInspectorから取得、これを変えることで入力を差別化
-    public KeyCode KEYCODE_MOVE_LEFT = KeyCode.LeftArrow;
-    public KeyCode KEYCODE_MOVE_UP = KeyCode.UpArrow;
-    public KeyCode KEYCODE_MOVE_RIGHT = KeyCode.RightArrow;
-    public KeyCode KEYCODE_MOVE_DOWN = KeyCode.DownArrow;
-    public KeyCode KEYCODE_ACTION = KeyCode.Space;
+    private bool isMove = false;                 //動いている時true
+    private bool isActive;                       //操作中のときはtrue
+    private SoundManager soundManager;           //サウンドマネージャー、アクティブプレイヤー切り替え時のSE再生に使用
 
-    public bool isActive;
-
-    //private static float MOVE_INTERVAL = 0.1f;      //静止状態から動き始めるまでの時間
-
-    private static int MOVE_FRAME = 60;             //1マス移動するのに必要なフレーム数  60だと1秒間で6マスくらい
-
-    //private float firstInputTimer = 0;              //静止状態から動き出すまでの時間計測に使用
-    //private float movingTimer = 0;                  //動いている最中の時間計測に使用
-    private bool isMove = false;                    //動いている時true
-
-    public MapStatus mapStatus;                     //マップステータス
-    private SoundManager soundManager;
-
-    public int playerPosX;                          //このプレイヤーのX座標
-    public int playerPosY;                          //このプレイヤーのY座標
+    public MapStatus mapStatus;                  //マップステータス、プレイヤー生成時に渡される
+    public int playerPosX;                       //このプレイヤーのX座標
+    public int playerPosY;                       //このプレイヤーのY座標
 
     // Start is called before the first frame update
     void Start()
     {
-        if(transform.name == "MainPlayer")
-        {
-            isActive = true;
-            SetColorAlpha(1.0f);
-        }
-        else if (transform.name == "SubPlayer")
-        {
-            isActive = false;
-            SetColorAlpha(0.5f);
-        }
+        //操作プレイヤー初期化
+        SetController();
 
+        //soundManagerの初期化
         soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        //操作プレイヤー切り替え
         SwitchController();
 
+        //操作中のときは移動処理
         if (isActive)
         {
             Move();
         }
-
-        /*
-        //デバッグ用currentDir視覚化
-        switch (currentDir)
-        {
-            case MapStatus.Direction.Left:
-                transform.eulerAngles = new Vector3(0, 0, 90);
-                break;
-            case MapStatus.Direction.Up:
-                transform.eulerAngles = new Vector3(0, 0, 0);
-                break;
-            case MapStatus.Direction.Right:
-                transform.eulerAngles = new Vector3(0, 0, 270);
-                break;
-            case MapStatus.Direction.Down:
-                transform.eulerAngles = new Vector3(0, 0, 180);
-                break;
-        }
-        */
     }
 
+    //操作プレイヤー初期化
+    private void SetController()
+    {
+        //MainPlayerをアクティブにする
+        if (transform.name == "MainPlayer")
+        {
+            isActive = true;
+            SetColorAlpha(1.0f);
+        }
+        //SubPlayerを非アクティブにする
+        else if (transform.name == "SubPlayer")
+        {
+            isActive = false;
+            SetColorAlpha(0.5f);
+        }
+    }
+
+    //操作プレイヤー切り替え
     private void SwitchController()
     {
         if (Input.GetKeyDown(KEYCODE_ACTION))
@@ -95,7 +70,7 @@ public class Player : MonoBehaviour
             {
                 isActive = false;
                 SetColorAlpha(0.5f);
-                soundManager.playSound("switchControllerSE");
+                soundManager.PlaySound("switchControllerSE");
             }
             else
             {
@@ -105,23 +80,25 @@ public class Player : MonoBehaviour
         }
     }
 
+    //操作プレイヤー切り替え時に色を変える
     private void SetColorAlpha(float alpha)
     {
-        //Debug.Log("alpha");
         float r = transform.GetComponent<SpriteRenderer>().color.r;
         float g = transform.GetComponent<SpriteRenderer>().color.g;
         float b = transform.GetComponent<SpriteRenderer>().color.b;
         transform.GetComponent<SpriteRenderer>().color = new Color(r, g, b, alpha);
     }
 
+    //移動処理
     private void Move()
     {
-        //静止状態のとき
+        //動いていないときに入力を受け付ける
         if (!isMove)
         {
-            //キー入力と同時に向き変更
+            //移動キー押し込み時に動く
             if (Input.GetKeyDown(KEYCODE_MOVE_LEFT))
             {
+                //入力方向に移動できるか確認
                 if (mapStatus.CheckMovable(transform.gameObject, MapStatus.Direction.Left, playerPosX, playerPosY))
                 {
                     isMove = true;
@@ -155,362 +132,58 @@ public class Player : MonoBehaviour
         }
     }
 
-
+    //MapDataの更新と座標移動、コルーチンで他の入力をスルーさせる
     IEnumerator MovingPosition(MapStatus.Direction dir)
     {
+        //もともといた位置をnullに
         mapStatus.UpdateMapData(playerPosX, playerPosY, null);
 
+        //一時的な変数宣言
+        float timer = 0;
+        Vector3 moveDir = Vector3.zero;
+
+        //入力方向に応じてplayerPosの更新と位置の移動
         switch (dir)
         {
             case MapStatus.Direction.Left:
+                //playerPosの更新
                 playerPosX -= 1;
-                for (int i = 0; i < MOVE_FRAME; i++)
-                {
-                    transform.position += Vector3.left / MOVE_FRAME;
-                    yield return null;
-                }
+                //位置の移動
+                moveDir = Vector3.left;
                 break;
 
             case MapStatus.Direction.Up:
                 playerPosY += 1;
-                for (int i = 0; i < MOVE_FRAME; i++)
-                {
-                    transform.position += Vector3.up / MOVE_FRAME;
-                    yield return null;
-                }
+                moveDir = Vector3.up;
                 break;
 
             case MapStatus.Direction.Right:
                 playerPosX += 1;
-                for (int i = 0; i < MOVE_FRAME; i++)
-                {
-                    transform.position += Vector3.right / MOVE_FRAME;
-                    yield return null;
-                }
+                moveDir = Vector3.right;
                 break;
 
             case MapStatus.Direction.Down:
                 playerPosY -= 1;
-                for (int i = 0; i < MOVE_FRAME; i++)
-                {
-                    transform.position += Vector3.down / MOVE_FRAME;
-                    yield return null;
-                }
+                moveDir = Vector3.down;
                 break;
         }
 
+        while (timer <= MOVE_TIME)
+        {
+            transform.position += moveDir / (MOVE_TIME / Time.deltaTime);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        //新しく移動した位置をこのオブジェクトに
         mapStatus.UpdateMapData(playerPosX, playerPosY, transform.gameObject);
+
+        //ゴールチェックとスイッチチェック
         mapStatus.CheckGoal();
         mapStatus.CheckSwitch(playerPosX, playerPosY);
+
+        //移動終了
         isMove = false;
     }
-
-
-
-    /*
-    private void Move_()
-    {
-        //静止状態のとき
-        if (!isMove)
-        {
-            //キー入力と同時に向き変更
-            if (Input.GetKeyDown(KEYCODE_MOVE_LEFT))
-            {
-                //向いている方向と入力方向が同じなら移動
-                if(currentDir == MapStatus.Direction.Left)
-                {
-                    StartCoroutine(MovingPosition(MapStatus.Direction.Left));
-                }
-                else
-                {
-                    currentDir = MapStatus.Direction.Left;
-                }
-            }
-            else if (Input.GetKeyDown(KEYCODE_MOVE_UP))
-            {
-                if (currentDir == MapStatus.Direction.Up)
-                {
-                    StartCoroutine(MovingPosition(MapStatus.Direction.Up));
-                }
-                else
-                {
-                    currentDir = MapStatus.Direction.Up;
-                }
-            }
-            else if (Input.GetKeyDown(KEYCODE_MOVE_RIGHT))
-            {
-                if (currentDir == MapStatus.Direction.Right)
-                {
-                    StartCoroutine(MovingPosition(MapStatus.Direction.Right));
-                }
-                else
-                {
-                    currentDir = MapStatus.Direction.Right;
-                }
-            }
-            else if (Input.GetKeyDown(KEYCODE_MOVE_DOWN))
-            {
-                if (currentDir == MapStatus.Direction.Down)
-                {
-                    StartCoroutine(MovingPosition(MapStatus.Direction.Down));
-                }
-                else
-                {
-                    currentDir = MapStatus.Direction.Down;
-                }
-            }
-
-            //いずれかのキーが入力されているとき
-            if (Input.GetKey(KEYCODE_MOVE_LEFT) || Input.GetKey(KEYCODE_MOVE_UP) ||
-               Input.GetKey(KEYCODE_MOVE_RIGHT) || Input.GetKey(KEYCODE_MOVE_DOWN))
-            {
-                //入力開始からMOVE_INTERVAL時間経過したら動き出す
-                firstInputTimer += Time.deltaTime;
-                if (firstInputTimer > MOVE_INTERVAL)
-                {
-                    isMove = true;
-                }
-            }
-            //途中で入力が終了したらタイマーリセット
-            else
-            {
-                firstInputTimer = 0;
-            }
-        }
-        //すでに動いているとき
-        else if (isMove)
-        {
-            //時間を計測し動いている最中は処理終了
-            movingTimer += Time.deltaTime;
-            if (movingTimer >= MOVE_FRAME * Time.deltaTime)
-            {
-                movingTimer = 0;
-            }
-            else
-            {
-                return;
-            }
-
-            //入力方向に向きを変え移動
-            if (Input.GetKey(KEYCODE_MOVE_LEFT))
-            {
-                StartCoroutine(MovingPosition(MapStatus.Direction.Left));
-            }
-            else if (Input.GetKey(KEYCODE_MOVE_UP))
-            {
-                StartCoroutine(MovingPosition(MapStatus.Direction.Up));
-            }
-            else if (Input.GetKey(KEYCODE_MOVE_RIGHT))
-            {
-                StartCoroutine(MovingPosition(MapStatus.Direction.Right));
-            }
-            else if (Input.GetKey(KEYCODE_MOVE_DOWN))
-            {
-                StartCoroutine(MovingPosition(MapStatus.Direction.Down));
-            }
-            //いずれのキーの入力もなければ動いている状態を終了させる
-            else
-            {
-                isMove = false;
-            }
-        }
-    }
-    */
-
-    /*
-    IEnumerator MovingPosition(MapStatus.Direction dir)
-    {
-
-        yield return null;
-        if (!mapStatus.CheckMovable(dir, playerPosX, playerPosY)) yield break;
-        isMove = true;
-
-        //CurrentMapStatus.UpdateMapData(MapStatus.FloorKind.Nomal, CurrentMapStatus.playerPosX, CurrentMapStatus.playerPosY);
-        mapStatus.UpdateMapData(MapStatus.FloorKind.Nomal, playerPosX, playerPosY, null);
-
-        switch (dir)
-        {
-            case MapStatus.Direction.Left:
-                
-                if(CheckBox(CurrentMapStatus.playerPosX - 1, CurrentMapStatus.playerPosY))
-                {
-                    CurrentMapStatus.mapObject[CurrentMapStatus.playerPosX - 1][CurrentMapStatus.playerPosY].GetComponent<Box>().test(MapStatus.Direction.Left);
-                }
-                CurrentMapStatus.playerPosX -= 1;
-                
-                if (CheckBox(dir, playerPosX, playerPosY))
-                {
-                    CurrentMapStatus.mapObject[playerPosX - 1][playerPosY].GetComponent<Box>().StartCorotineMoveBox(dir);
-                }
-                
-
-                if (mapStatus.ReturnFloor(playerPosX - 1, playerPosY) == MapStatus.FloorKind.BoxOnNomal)
-                {
-                    if ((mapStatus.objectData[mapStatus.objectData[playerPosX - 1][playerPosY].transform.name].prefabName == CAN_PUSH_BOX) &&
-                        (mapStatus.ReturnFloor(playerPosX - 2, playerPosY) == MapStatus.FloorKind.Nomal))
-                    {
-                        mapStatus.objectData[playerPosX - 1][playerPosY].GetComponent<Box>().StartCorotineMoveBox(dir);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-
-                playerPosX -= 1;
-
-                currentDir = MapStatus.Direction.Left;
-                for (int i = 0; i < MOVE_FRAME; i++)
-                {
-                    transform.position += Vector3.left / MOVE_FRAME;
-                    yield return null;
-                }
-                break;
-
-            case MapStatus.Direction.Up:
-
-                if (mapStatus.ReturnFloor(playerPosX, playerPosY + 1) == MapStatus.FloorKind.BoxOnNomal)
-                {
-                    if ((mapStatus.objectData[mapStatus.objectData[playerPosX][playerPosY + 1].transform.name].prefabName == CAN_PUSH_BOX) &&
-                        (mapStatus.ReturnFloor(playerPosX, playerPosY + 2) == MapStatus.FloorKind.Nomal))
-                    {
-                        mapStatus.objectData[playerPosX][playerPosY + 1].GetComponent<Box>().StartCorotineMoveBox(dir);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-
-                playerPosY += 1;
-
-                currentDir = MapStatus.Direction.Up;
-                for (int i = 0; i < MOVE_FRAME; i++)
-                {
-                    transform.position += Vector3.up / MOVE_FRAME;
-                    yield return null;
-                }
-                break;
-
-            case MapStatus.Direction.Right:
-
-                if (mapStatus.ReturnFloor(playerPosX + 1, playerPosY) == MapStatus.FloorKind.BoxOnNomal)
-                {
-                    if ((mapStatus.objectData[mapStatus.objectData[playerPosX + 1][playerPosY].transform.name].prefabName == CAN_PUSH_BOX) &&
-                     (mapStatus.ReturnFloor(playerPosX + 2, playerPosY) == MapStatus.FloorKind.Nomal))
-                    {
-                        mapStatus.objectData[playerPosX + 1][playerPosY].GetComponent<Box>().StartCorotineMoveBox(dir);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-
-                playerPosX += 1;
-
-                currentDir = MapStatus.Direction.Right;
-                for (int i = 0; i < MOVE_FRAME; i++)
-                {
-                    transform.position += Vector3.right / MOVE_FRAME;
-                    yield return null;
-                }
-                break;
-
-            case MapStatus.Direction.Down:
-
-                if (mapStatus.ReturnFloor(playerPosX, playerPosY - 1) == MapStatus.FloorKind.BoxOnNomal)
-                {
-                    if ((mapStatus.objectData[mapStatus.objectData[playerPosX][playerPosY - 1].transform.name].prefabName == CAN_PUSH_BOX) &&
-                        (mapStatus.ReturnFloor(playerPosX, playerPosY - 2) == MapStatus.FloorKind.Nomal))
-                    {
-                        mapStatus.objectData[playerPosX][playerPosY - 1].GetComponent<Box>().StartCorotineMoveBox(dir);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-
-                playerPosY -= 1;
-
-                currentDir = MapStatus.Direction.Down;
-                for (int i = 0; i < MOVE_FRAME; i++)
-                {
-                    transform.position += Vector3.down / MOVE_FRAME;
-                    yield return null;
-                }
-                break;
-        }
-
-        //CurrentMapStatus.UpdateMapData(MapStatus.FloorKind.PlayerOnNomal, CurrentMapStatus.playerPosX, CurrentMapStatus.playerPosY);
-        mapStatus.UpdateMapData(MapStatus.FloorKind.PlayerOnNomal, playerPosX, playerPosY, transform.gameObject);
-
-    }
-    */
-
-
-
-    /*
-    private void PushBox(MapStatus.Direction dir, int posX, int posY)
-    {
-        switch (dir)
-        {
-            case MapStatus.Direction.Left:
-                if (CurrentMapStatus.ReturnFloor(posX - 1, posY) == MapStatus.FloorKind.BoxOnNomal)
-                {
-                    if (CurrentMapStatus.ReturnFloor(posX - 2, posY) == MapStatus.FloorKind.Nomal)
-                    {
-                        CurrentMapStatus.mapObject[playerPosX - 1][playerPosY].GetComponent<Box>().StartCorotineMoveBox(dir); 
-                        
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-
-                playerPosX -= 1;
-
-                currentDir = MapStatus.Direction.Left;
-                for (int i = 0; i < MOVE_FRAME; i++)
-                {
-                    transform.position += Vector3.left / MOVE_FRAME;
-                    yield return null;
-                }
-                break;
-        }
-
-    }
-    
-    private bool CheckBox(MapStatus.Direction dir, int posX, int posY)
-    {
-        MapStatus.FloorKind fk = MapStatus.FloorKind.Nomal;
-
-        switch (dir)
-        {
-            case MapStatus.Direction.Left:
-                fk = CurrentMapStatus.ReturnFloor(posX - 1, posY);
-                break;
-            case MapStatus.Direction.Up:
-                fk = CurrentMapStatus.ReturnFloor(posX, posY + 1);
-                break;
-            case MapStatus.Direction.Right:
-                fk = CurrentMapStatus.ReturnFloor(posX + 1, posY);
-                break;
-            case MapStatus.Direction.Down:
-                fk = CurrentMapStatus.ReturnFloor(posX, posY - 1);
-                break;
-        }
-
-        if(fk == MapStatus.FloorKind.BoxOnNomal)
-        {
-            return true;
-        }
-
-        return false;
-    }
-    
-    */
 
 }

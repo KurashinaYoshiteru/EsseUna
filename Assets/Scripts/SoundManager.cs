@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class SoundManager : SingletonMonoBehaviour<SoundManager>
 {
-    private GameObject soundManager;
-    //public AudioSource seAudioSource;
-    //public AudioSource bgmAudioSource;
-    private AudioSource seAudioSource;
-    private AudioSource bgmAudioSource;
+    private AudioSource bgmAudioSource;          //BGM用のオーディオソース
+    private AudioSource seAudioSource;           //SE用のオーディオソース
 
+    //インスペクターで各音源をセット
     public AudioClip mainBGM;
     public AudioClip stage1BGM;
     public AudioClip stage2BGM;
@@ -33,6 +31,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
     private void Awake()
     {
+        //Singleton化
         if (this != Instance)
         {
             Destroy(gameObject);
@@ -40,19 +39,13 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         }
         DontDestroyOnLoad(this);
 
-        //soundManager = GameObject.Find("SoundManager");
-        //audioSource = soundManager.GetComponent<AudioSource>();
-        //audioSource.loop = true;
+        //2つのオーディオソースを初期化
         bgmAudioSource = gameObject.AddComponent<AudioSource>();
         seAudioSource = gameObject.AddComponent<AudioSource>();
     }
 
-    public void playSE(AudioClip clipSE)
-    {
-        seAudioSource.PlayOneShot(clipSE);
-    }
-
-    public void playBGM(AudioClip clipBGM)
+    //BGM再生
+    private void PlayBGM(AudioClip clipBGM)
     {
         bgmAudioSource.Stop();
         bgmAudioSource.clip = clipBGM;
@@ -60,82 +53,78 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         bgmAudioSource.Play();
     }
 
-    public void playSound(string key)
+    //SE再生
+    private void PlaySE(AudioClip clipSE)
+    {
+        seAudioSource.PlayOneShot(clipSE);
+    }
+
+    //BGMとSE一括でまとめる、サウンドは全てこの関数を呼ぶことにする
+    public void PlaySound(string key)
     {
         switch (key)
         {
             case "mainBGM":
-                playBGM(mainBGM);
+                PlayBGM(mainBGM);
                 break;
             case "stage1BGM":
-                playBGM(stage1BGM);
+                PlayBGM(stage1BGM);
                 break;
             case "stage2BGM":
-                playBGM(stage2BGM);
+                PlayBGM(stage2BGM);
                 break;
             case "stage3BGM":
-                playBGM(stage3BGM);
+                PlayBGM(stage3BGM);
                 break;
             case "stage4BGM":
-                playBGM(stage4BGM);
+                PlayBGM(stage4BGM);
                 break;
             case "stage5BGM":
-                playBGM(stage5BGM);
+                PlayBGM(stage5BGM);
                 break;
             case "stage6BGM":
-                playBGM(stage6BGM);
+                PlayBGM(stage6BGM);
                 break;
             case "stage7BGM":
-                playBGM(stage7BGM);
+                PlayBGM(stage7BGM);
                 break;
             case "stage8BGM":
-                playBGM(stage8BGM);
+                PlayBGM(stage8BGM);
                 break;
             case "decisionSE":
-                playSE(decisionSE);
+                PlaySE(decisionSE);
                 break;
             case "backSE":
-                playSE(backSE);
+                PlaySE(backSE);
                 break;
             case "resetSE":
-                playSE(resetSE);
+                PlaySE(resetSE);
                 break;
             case "stageClearSE":
-                playSE(stageClearSE);
+                PlaySE(stageClearSE);
                 break;
             case "gameOverSE":
-                playSE(gameOverSE);
+                PlaySE(gameOverSE);
                 break;
             case "mainPlayerMoveSE":
-                playSE(mainPlayerMoveSE);
+                PlaySE(mainPlayerMoveSE);
                 break;
             case "subPlayerMoveSE":
-                playSE(subPlayerMoveSE);
+                PlaySE(subPlayerMoveSE);
                 break;
             case "boxMoveSE":
-                playSE(boxMoveSE);
+                PlaySE(boxMoveSE);
                 break;
             case "playerSwitchSE":
-                playSE(playerSwitchSE);
+                PlaySE(playerSwitchSE);
                 break;
             case "boxSwitchSE":
-                playSE(boxSwitchSE);
+                PlaySE(boxSwitchSE);
                 break;
             case "switchControllerSE":
-                playSE(switchControllerSE);
+                PlaySE(switchControllerSE);
                 break;
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

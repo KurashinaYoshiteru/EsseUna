@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//シーンに必ず一つしか存在しないオブジェクトはこのクラスを継承させる
+//本プロジェクトではGameManagerとSoundManagerの二つ
 public class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour
 {
     private static T instance;
