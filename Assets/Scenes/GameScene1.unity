@@ -471,9 +471,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Game
+  m_text: 'GAME
 
-    Over...'
+    OVER...'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 165e8660e2f380046813acb019b298f0, type: 2}
   m_sharedMaterial: {fileID: 8776972478369849348, guid: 165e8660e2f380046813acb019b298f0, type: 2}
@@ -500,8 +500,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 200
-  m_fontSizeBase: 200
+  m_fontSize: 190
+  m_fontSizeBase: 190
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2063,9 +2063,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Stage
+  m_text: 'STAGE
 
-    Clear!'
+    CLEAR!'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3d941c55ffe17c0458ab6664c124bb85, type: 2}
   m_sharedMaterial: {fileID: 1966636786667366271, guid: 3d941c55ffe17c0458ab6664c124bb85, type: 2}

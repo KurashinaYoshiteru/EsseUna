@@ -776,7 +776,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1119407782
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1079,7 +1079,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: STAGE 0
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3d941c55ffe17c0458ab6664c124bb85, type: 2}
   m_sharedMaterial: {fileID: 1966636786667366271, guid: 3d941c55ffe17c0458ab6664c124bb85, type: 2}
@@ -2358,7 +2358,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'TURN : 99'
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3d941c55ffe17c0458ab6664c124bb85, type: 2}
   m_sharedMaterial: {fileID: 1966636786667366271, guid: 3d941c55ffe17c0458ab6664c124bb85, type: 2}

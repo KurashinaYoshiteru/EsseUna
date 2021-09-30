@@ -101,7 +101,15 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         tmpGameManager.GetComponent<GameManager>().StartCoroutine(LoadScene("StageSelectScene", GameState.StageSelectScene, false));
     }
 
-    //ステージセレクト→タイトル
+    //タイトル→マニュアル
+    public void ForwardLoadManualScene()
+    {
+        PlaySceneChangeSE("decisionSE");
+        tmpGameManager = GameObject.Find("GameManager");
+        tmpGameManager.GetComponent<GameManager>().StartCoroutine(LoadScene("ManualScene", GameState.StageSelectScene, false));
+    }
+
+    //ステージセレクト/マニュアル→タイトル
     public void BackLoadTitleScene()
     {
         PlaySceneChangeSE("backSE");

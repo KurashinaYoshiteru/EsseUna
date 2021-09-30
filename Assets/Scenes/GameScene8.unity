@@ -776,7 +776,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1119407782
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2193,7 +2193,7 @@ MonoBehaviour:
   subBoxPrefab: {fileID: 1726570537070773444, guid: 488e1988aeb8570419c40e1bfa843005, type: 3}
   boxPrefab: {fileID: 6786001323405204872, guid: aff43e86fd5b6c84f8e90c69b90edb70, type: 3}
   remainTurn: 0
-  stageNum: 2
+  stageNum: 0
   mainCamera: {fileID: 519420028}
   cameraBlank: 2
 --- !u!1 &1807343808
@@ -2465,7 +2465,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapFile: {fileID: 4900000, guid: a4741416c7ed7c04c963c611ef325271, type: 3}
-  stageName: Stage2
+  stageName: Stage8
 --- !u!4 &1880578671
 Transform:
   m_ObjectHideFlags: 0

@@ -407,7 +407,7 @@ public class MapStatus : MonoBehaviour
                 }
                 break;
             case "Box":
-                if (returnFloor == FloorKind.Nomal || returnFloor == FloorKind.MainPlayerOnly || returnFloor == FloorKind.SubPlayerOnly)
+                if (returnFloor == FloorKind.Nomal)
                 {
                     if (objectData[checkPosX][checkPosY] == null)
                     {
@@ -417,7 +417,7 @@ public class MapStatus : MonoBehaviour
                 }
                 break;
             case "MainBox":
-                if (returnFloor == FloorKind.Nomal || returnFloor == FloorKind.MainPlayerOnly || returnFloor == FloorKind.SubPlayerOnly)
+                if (returnFloor == FloorKind.Nomal)
                 {
                     if (objectData[checkPosX][checkPosY] == null)
                     {
@@ -427,7 +427,7 @@ public class MapStatus : MonoBehaviour
                 }
                 break;
             case "SubBox":
-                if (returnFloor == FloorKind.Nomal || returnFloor == FloorKind.MainPlayerOnly || returnFloor == FloorKind.SubPlayerOnly)
+                if (returnFloor == FloorKind.Nomal)
                 {
                     if (objectData[checkPosX][checkPosY] == null)
                     {

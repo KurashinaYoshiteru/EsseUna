@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/TitleScene.unity
     guid: eadcdcc8f07748143a8cab63107ff4f7
   - enabled: 1
+    path: Assets/Scenes/ManualScene.unity
+    guid: b84bb17fd5c6ef347b7cef857de4ee3e
+  - enabled: 1
     path: Assets/Scenes/StageSelectScene.unity
     guid: 5bcf735ed2fa75b45b47a9e72c6ac76c
   - enabled: 1
@@ -23,5 +26,20 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameScene3.unity
     guid: eefb452bc1c144a449a8915c28785f5c
+  - enabled: 1
+    path: Assets/Scenes/GameScene4.unity
+    guid: 54b26dd57d5759047ae3577fd8239f76
+  - enabled: 1
+    path: Assets/Scenes/GameScene5.unity
+    guid: 762ecdabb9fba3e4b9b4a9bffc8a88c4
+  - enabled: 1
+    path: Assets/Scenes/GameScene6.unity
+    guid: 58a302a61a7e2774bbd2e58c8e34f2f7
+  - enabled: 1
+    path: Assets/Scenes/GameScene7.unity
+    guid: 5da22f7c8dd43f14a93c30f71e4ae934
+  - enabled: 1
+    path: Assets/Scenes/GameScene8.unity
+    guid: 59445ecde9bf3f3479e6eae2a65c8146
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: defcc2c201a641f4c9371701c7b8bc6d, type: 2}
