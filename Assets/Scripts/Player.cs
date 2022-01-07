@@ -6,20 +6,20 @@ public class Player : MonoBehaviour
 {
 
     //キーコードを変数化して後で変えられるようにしておく
-    private KeyCode KEYCODE_MOVE_LEFT = KeyCode.LeftArrow;
-    private KeyCode KEYCODE_MOVE_UP = KeyCode.UpArrow;
-    private KeyCode KEYCODE_MOVE_RIGHT = KeyCode.RightArrow;
-    private KeyCode KEYCODE_MOVE_DOWN = KeyCode.DownArrow;
-    private KeyCode KEYCODE_ACTION = KeyCode.Space;
-    private static float MOVE_TIME = 0.2f;       //1マス移動するのにかかる時間
+    private const KeyCode KEYCODE_MOVE_LEFT = KeyCode.LeftArrow;
+    private const KeyCode KEYCODE_MOVE_UP = KeyCode.UpArrow;
+    private const KeyCode KEYCODE_MOVE_RIGHT = KeyCode.RightArrow;
+    private const KeyCode KEYCODE_MOVE_DOWN = KeyCode.DownArrow;
+    private const KeyCode KEYCODE_ACTION = KeyCode.Space;
+    private const float MOVE_TIME = 0.2f;        //1マス移動するのにかかる時間
 
     private bool isMove = false;                 //動いている時true
     private bool isActive;                       //操作中のときはtrue
     private SoundManager soundManager;           //サウンドマネージャー、アクティブプレイヤー切り替え時のSE再生に使用
 
-    public MapStatus mapStatus;                  //マップステータス、プレイヤー生成時に渡される
     public int playerPosX;                       //このプレイヤーのX座標
     public int playerPosY;                       //このプレイヤーのY座標
+    public MapStatus mapStatus;                  //マップステータス、プレイヤー生成時に渡される
 
     // Start is called before the first frame update
     void Start()
@@ -185,5 +185,5 @@ public class Player : MonoBehaviour
         //移動終了
         isMove = false;
     }
-
+    
 }

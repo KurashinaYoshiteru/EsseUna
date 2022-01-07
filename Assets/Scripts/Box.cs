@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Box : MonoBehaviour
 {
-    private static float MOVE_TIME = 0.2f;       //1マス移動するのにかかる時間
+    private const float MOVE_TIME = 0.2f;       //1マス移動するのにかかる時間
 
     public MapStatus mapStatus;                  //現在のMapStatus.cs、MapDataの更新の際に参照
     public int boxPosX;                          //X座標

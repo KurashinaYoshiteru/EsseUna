@@ -5,12 +5,12 @@ using UnityEngine.UI;
 
 public class FadeManager : MonoBehaviour
 {
+    
+    public bool isFadeIn = false;           //フェードイン最中にtrue
+    public bool isFadeOut = false;          //フェードアウト最中にtrue
 
-    public bool isFadeIn = false;
-    public bool isFadeOut = false;
-
-    public float alpha = 0.0f;
-    public float fadeSpeed = 1.0f;
+    public float alpha = 0.0f;              //仮の透明度
+    public const float FADE_SPEED = 1.0f;          //フェードの早さ
 
     // Start is called before the first frame update
     void Start()
@@ -34,7 +34,7 @@ public class FadeManager : MonoBehaviour
 
     private void FadeIn()
     {
-        alpha -= Time.deltaTime / fadeSpeed;
+        alpha -= Time.deltaTime / FADE_SPEED;
         if (alpha <= 0.0f)
         {
             isFadeIn = false;
@@ -45,7 +45,7 @@ public class FadeManager : MonoBehaviour
 
     private void FadeOut()
     {
-        alpha += Time.deltaTime / fadeSpeed;
+        alpha += Time.deltaTime / FADE_SPEED;
         if (alpha >= 1.0f)
         {
             isFadeOut = false;

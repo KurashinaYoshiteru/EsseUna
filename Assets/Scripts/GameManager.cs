@@ -11,9 +11,10 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     private GameObject tmpGameManager;             //シーン遷移時に一時的に使われるGameManager
 
     public GameObject fadeUIprefab;                //フェードUIプレハブ
+    public SoundManager soundManager;              //サウンドマネージャー
     public bool createMapchipsCompleted = false;   //マップチップの生成が完了したらtrue
     public int stageNum;                           //ステージ数
-    public SoundManager soundManager;              //サウンドマネージャー
+    public int stageClearNum = 0;                  //ステージクリア数
 
     //ゲームの状態列挙、シーン遷移の判別に使用
     public enum GameState
@@ -35,6 +36,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         DontDestroyOnLoad(this);
 
         PlaySceneBGM("mainBGM");
+
     }
 
     //指定されたBGMを流す
@@ -51,19 +53,21 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         soundManager.PlaySound(key);
     }
 
-    //
+    //シーン遷移は一回ここを挟む、各シーン遷移関数→LosdScene_→LoadScene
     public void LoadScene_(string sceneName, GameState state, bool changeBGM)
     {
         tmpGameManager = GameObject.Find("GameManager");
         tmpGameManager.GetComponent<GameManager>().StartCoroutine(LoadScene(sceneName, state, changeBGM));
     }
 
+    //フェードのためにコルーチンで使う
     IEnumerator LoadScene(string sceneName, GameState state, bool changeBGM)
     {
         fadeUI = Instantiate(fadeUIprefab);
         fadeUI.GetComponent<FadeManager>().StartFadeOut();
         yield return new WaitForSeconds(1.0f);
         SceneManager.LoadScene(sceneName);
+        yield return new WaitForSeconds(1.0f);
 
         if (state == GameState.GamePlay)
         {
@@ -130,7 +134,6 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     public void BackLoadStageSelectScene()
     {
         PlaySceneChangeSE("backSE");
-
         tmpGameManager = GameObject.Find("GameManager");
         tmpGameManager.GetComponent<GameManager>().StartCoroutine(LoadScene("StageSelectScene", GameState.StageSelectScene, true));
     }

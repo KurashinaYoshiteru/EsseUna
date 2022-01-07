@@ -20,8 +20,6 @@ public class MapStatus : MonoBehaviour
     public GameObject subBoxPrefab;
     public GameObject boxPrefab;
 
-    public int remainTurn;                    //残りターン数
-    public int stageNum;                      //ステージ数
 
     //床の種類
     public enum FloorKind
@@ -48,16 +46,22 @@ public class MapStatus : MonoBehaviour
     public FloorKind[][] floorData;         //常に変わることのない床の種類のデータ
     public GameObject[][] objectData;       //常に更新されるマップ上のオブジェクト(プレイヤーや箱)などのデータ
 
+    //ゴール座標
     private int goalPosX = 0;
     private int goalPosY = 0;
+
+    public int remainTurn;                    //残りターン数
+    public int stageNum;                      //ステージ数
 
     private GameObject mainPlayer;                              //メインプレイヤー
     private GameObject subPlayer;                               //サブプレイヤー
     private List<GameObject> box = new List<GameObject>();      //箱のリスト
+
     public GameObject mainCamera;                               //カメラ
     public float cameraBlank = 0;                               //カメラの余白
 
     //UIを宣言
+    public  GameObject manualUI;         //操作説明だけインスペクターから
     private GameObject stageClearUI;
     private GameObject gameOverUI;
     private GameObject backStageSelectButtonUI;
@@ -65,6 +69,7 @@ public class MapStatus : MonoBehaviour
     private TextMeshProUGUI stageNameText;
     private TextMeshProUGUI remainTurnText;
 
+    private static bool[] notFirstPlay = new bool[9];            //２回目以降にプレイするステージのときtrue
 
     // Start is called before the first frame update
     void Start()
@@ -84,6 +89,13 @@ public class MapStatus : MonoBehaviour
 
         //カメラのセット
         SetCamera();
+
+        //２回目以降のプレイではない(初プレイ)とき、manualUIを表示
+        if (!notFirstPlay[stageNum])
+        {
+            notFirstPlay[stageNum] = true;
+            manualUI.SetActive(true);
+        }
     }
 
 
@@ -135,6 +147,7 @@ public class MapStatus : MonoBehaviour
 
         //生成完了したらGameManagerにこれを伝える
         gameManagerObject.GetComponent<GameManager>().createMapchipsCompleted = true;
+
     }
 
     //オブジェクト生成
@@ -504,16 +517,22 @@ public class MapStatus : MonoBehaviour
     //ゴール時の処理
     void Goal()
     {
-        RemovePlayerComponent();
-        SetActiveStageClearText();
+        RemovePlayerComponent();        //プレイヤー入力をなくす
+        SetActiveStageClearText();      //ステージクリアUIの表示
         soundManager.PlaySound("stageClearSE");
+
+        //現在のステージがステージクリア数+1(最新ステージ)のときステージクリア数を+1する
+        if (stageNum == gameManagerObject.GetComponent<GameManager>().stageClearNum + 1)
+        {
+            gameManagerObject.GetComponent<GameManager>().stageClearNum++;
+        }
     }
 
     //ゲームオーバー時の処理
     void GameOver()
     {
-        RemovePlayerComponent();
-        SetActiveGameOverText();
+        RemovePlayerComponent();      //プレイヤー入力をなくす
+        SetActiveGameOverText();      //ステージクリアUIの表示
         soundManager.PlaySound("gameOverSE");
     }
 

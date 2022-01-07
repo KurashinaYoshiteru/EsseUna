@@ -1032,6 +1032,10 @@ PrefabInstance:
       propertyPath: soundManager
       value: 
       objectReference: {fileID: 1746511223}
+    - target: {fileID: 1756661551264472710, guid: 6bef5a99c8050064fa95169867d1a51b, type: 3}
+      propertyPath: stageClearNum
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1756661551264472711, guid: 6bef5a99c8050064fa95169867d1a51b, type: 3}
       propertyPath: m_Name
       value: GameManager
