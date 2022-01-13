@@ -67,7 +67,6 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         fadeUI.GetComponent<FadeManager>().StartFadeOut();
         yield return new WaitForSeconds(1.0f);
         SceneManager.LoadScene(sceneName);
-        yield return new WaitForSeconds(1.0f);
 
         if (state == GameState.GamePlay)
         {
